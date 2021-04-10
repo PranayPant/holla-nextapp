@@ -4,7 +4,8 @@ export default function Login() {
    const router = useRouter()
    async function fetchOauthToken() {
       try {
-         const code = router.asPath.split('?')[1].split('&')[0].split('=')[1]
+         //const code = router.asPath.split('?')[1].split('&')[0].split('=')[1]
+         const code = router.query['code']
          const response = await fetch(
             `${window.location.origin}/api/oauth/google`,
             {

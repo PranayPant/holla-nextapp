@@ -1,10 +1,26 @@
-function oauthRedirect_google() {
-   return `${process.env.NEXT_PUBLIC_GOOGLE_OAUTH_ENDPOINT}?client_id=${process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_OAUTH_REDIRECT_URI}&response_type=code&scope=openid profile email`
+const OAUTH_REDIRECT_URLS = {
+   google: `${process.env.NEXT_PUBLIC_GOOGLE_OAUTH_ENDPOINT}?client_id=${process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_OAUTH_REDIRECT_URI}&response_type=code&scope=openid profile email`,
 }
 
-export function handleLogin(idp) {
-   const oauthUrl = oauthRedirect_google()
-   window.location.href = oauthUrl
+export function redirectToOauth(idp) {
+   window.location.href = OAUTH_REDIRECT_URLS[idp]
+}
+
+export async function handleLogout() {
+   try {
+      await fetch(
+         `${
+            process.env.NEXT_PUBLIC_GOOGLE_OAUTH_REVOKE_ENDPOINT
+         }?token=${window.localStorage.getItem('access_token')}`,
+         {
+            method: 'POST',
+         },
+      )
+      window.localStorage.removeItem('access_token')
+      window.localStorage.removeItem('id_token')
+   } catch (err) {
+      console.log('Error revoking token:', err)
+   }
 }
 
 export function jwt(token) {
