@@ -4,7 +4,6 @@ import connect from 'next-connect'
 const handler = connect()
 
 handler.post(async function (req, res) {
-   console.log(req.body)
    try {
       const code = JSON.parse(req.body).code
       const { data } = await axios({

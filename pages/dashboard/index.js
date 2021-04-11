@@ -1,15 +1,21 @@
 import { useEffect, useState } from 'react'
-import { jwt } from '../../utils'
+import useSession from '../../utils/hooks/session'
 
 export default function Dashboard() {
-   const [state, setState] = useState({ user: null })
-
+   const {
+      hasSession,
+      state,
+      redirectUnauthenticated,
+      logoutFromGoogle,
+   } = useSession()
    useEffect(() => {
-      setState((prev) => ({
-         ...prev,
-         user: jwt(window.localStorage.getItem('id_token')),
-      }))
-   }, [])
+      console.log(state)
+   }, [state.user])
 
-   return <>Hello {JSON.stringify(state.user)}</>
+   return (
+      <>
+         Hello {JSON.stringify(state.user)}
+         <button onClick={logoutFromGoogle}>Logout</button>
+      </>
+   )
 }

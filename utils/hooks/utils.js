@@ -9,3 +9,24 @@ export function redirectToOauth(idp) {
 export function validateToken(token) {
    return token !== null && token !== undefined
 }
+
+export function jwt(token) {
+   return JSON.parse(atob(token.split('.')[1]))
+}
+
+export async function handleGoogleLogout() {
+   try {
+      await fetch(
+         `${
+            process.env.NEXT_PUBLIC_GOOGLE_OAUTH_REVOKE_ENDPOINT
+         }?token=${window.localStorage.getItem('access_token')}`,
+         {
+            method: 'POST',
+         },
+      )
+      window.localStorage.removeItem('access_token')
+      window.localStorage.removeItem('id_token')
+   } catch (err) {
+      console.log('Error revoking token:', err)
+   }
+}
