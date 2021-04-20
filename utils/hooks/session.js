@@ -1,10 +1,35 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { redirectToOauth, jwt, handleGoogleLogout } from './utils'
+import { oauthRedirectUrl, jwt, handleGoogleLogout } from './utils'
 
-export default function useSession() {
-   const [state, setState] = useState({ user: null })
+export default function useSession(config = {}) {
+   const [state, setState] = useState({ user: null, hasSession: false })
    const router = useRouter()
+   const { authUrl = '/', unAuthUrl = '/' } = config
+
+   useEffect(() => {
+      console.log('user changed:', state)
+      if (state.user) {
+         if (window.location.pathname !== authUrl) {
+            router.replace(authUrl)
+         }
+      } else {
+         if (window.location.pathname !== authUrl) {
+            router.replace(unAuthUrl)
+         }
+      }
+   }, [state.user])
+
+   useEffect(() => {
+      const idToken = window.localStorage.getItem('id_token')
+      const user = idToken ? jwt(idToken) : null
+      const hasSession = user ? true : false
+      setState((prev) => ({
+         ...prev,
+         user,
+         hasSession,
+      }))
+   }, [])
 
    function hasSession() {
       return state.user && state.user.id_token
@@ -27,9 +52,9 @@ export default function useSession() {
          window.localStorage.setItem('access_token', data.access_token)
          setState((prev) => ({
             ...prev,
-            user: jwt(window.localStorage.getItem('id_token')),
+            user: jwt(data.id_token),
+            hasSession: true,
          }))
-         router.replace('/dashboard')
       } catch (err) {
          console.error('Error fetching oauth token:', err)
       }
@@ -43,10 +68,6 @@ export default function useSession() {
       router.replace('/')
    }
 
-   function redirectToGoogle() {
-      redirectToOauth('google')
-   }
-
    async function logoutFromGoogle() {
       setState((prev) => ({ ...prev, user: null }))
       await handleGoogleLogout()
@@ -57,7 +78,7 @@ export default function useSession() {
       hasSession,
       loginWithGoogle,
       redirectUnauthenticated,
-      redirectToGoogle,
+      oauthRedirectUrl,
       logoutFromGoogle,
    }
 }

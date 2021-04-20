@@ -1,16 +1,9 @@
-import { useEffect } from 'react'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
 import styles from '../styles/Home.module.css'
-import useSession from '../utils/hooks/session'
 import UnAuthenticated from '../components/UnAuthenticated'
+import Dashboard from '../components/Dashboard'
 
-export default function Home() {
-   const { hasSession } = useSession()
-   const router = useRouter()
-   if (hasSession()) {
-      router.replace('/dashboard')
-   }
+export default function Home({ session }) {
    return (
       <div className={styles.container}>
          <Head>
@@ -19,7 +12,8 @@ export default function Home() {
          </Head>
 
          <main className={styles.main}>
-            <UnAuthenticated />
+            {session.state.user && <Dashboard session={session} />}
+            {!session.state.user && <UnAuthenticated session={session} />}
          </main>
 
          <footer className={styles.footer}>

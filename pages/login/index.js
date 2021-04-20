@@ -1,9 +1,8 @@
 import { useEffect } from 'react'
-import useSession from '../../utils/hooks/session'
-export default function Login() {
-   const { loginWithGoogle } = useSession()
+export default function Login({ session }) {
    useEffect(() => {
-      loginWithGoogle()
+      session.loginWithGoogle()
    }, [])
+
    return <>Logging In</>
 }

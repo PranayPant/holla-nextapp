@@ -1,12 +1,14 @@
 import styles from '../styles.module.css'
 import { useRouter } from 'next/router'
-import useSession from '../../../utils/hooks/session'
 
-export default function GoogleSignIn() {
+export default function GoogleSignIn({ session }) {
+   const { oauthRedirectUrl } = session
    const router = useRouter()
-   const { redirectToGoogle } = useSession()
+   function handleLogin() {
+      router.replace(oauthRedirectUrl('google'))
+   }
    return (
-      <button className={styles.widget} onClick={redirectToGoogle}>
+      <button className={styles.widget} onClick={handleLogin}>
          <img height="40px" width="40px" src="/icons/googleSignInLogo.jpg" />
          <div>Sign In With Google</div>
       </button>

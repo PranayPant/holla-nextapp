@@ -1,8 +1,8 @@
 import GoogleSignIn from '../LoginWidgets/Google'
-export default function UnAuthenticated() {
+export default function UnAuthenticated({ session }) {
    return (
       <div>
-         <GoogleSignIn />
+         <GoogleSignIn session={session} />
       </div>
    )
 }
