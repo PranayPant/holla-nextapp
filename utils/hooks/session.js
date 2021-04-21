@@ -2,23 +2,9 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { oauthRedirectUrl, jwt, handleGoogleLogout } from './utils'
 
-export default function useSession(config = {}) {
+export default function useSession() {
    const [state, setState] = useState({ user: null, hasSession: false })
    const router = useRouter()
-   const { authUrl = '/', unAuthUrl = '/' } = config
-
-   useEffect(() => {
-      console.log('user changed:', state)
-      if (state.user) {
-         if (window.location.pathname !== authUrl) {
-            router.replace(authUrl)
-         }
-      } else {
-         if (window.location.pathname !== authUrl) {
-            router.replace(unAuthUrl)
-         }
-      }
-   }, [state.user])
 
    useEffect(() => {
       const idToken = window.localStorage.getItem('id_token')
@@ -69,8 +55,8 @@ export default function useSession(config = {}) {
    }
 
    async function logoutFromGoogle() {
-      setState((prev) => ({ ...prev, user: null }))
       await handleGoogleLogout()
+      setState((prev) => ({ ...prev, user: null }))
    }
 
    return {

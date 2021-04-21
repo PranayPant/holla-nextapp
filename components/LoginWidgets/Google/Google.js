@@ -8,8 +8,8 @@ export default function GoogleSignIn({ session }) {
       router.replace(oauthRedirectUrl('google'))
    }
    return (
-      <button className={styles.widget} onClick={handleLogin}>
-         <img height="40px" width="40px" src="/icons/googleSignInLogo.jpg" />
+      <button className="btn-primary flex" onClick={handleLogin}>
+         {/* <img height="40px" width="40px" src="/icons/googleSignInLogo.jpg" /> */}
          <div>Sign In With Google</div>
       </button>
    )
