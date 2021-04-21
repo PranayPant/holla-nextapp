@@ -37,11 +37,11 @@ button {
 }
 
 .btn-primary {
-   background-color: #6366f1;
+   @apply bg-indigo-500;
 }
 
 .btn-primary:hover {
-   background-color: #818cf8;
+   @apply bg-indigo-400;
 }
 
 .flex {
