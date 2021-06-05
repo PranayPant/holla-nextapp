@@ -1,17 +1,25 @@
 import WebSocket from 'ws'
 import connect from 'next-connect'
+import AWS from 'aws-sdk'
 
 const handler = connect()
 let connection = null
 
+async function getAWSParam(name) {
+   const response = await new AWS.SSM({ region: process.env.AWS_REGION })
+      .getParameter({ Name: name, WithDecryption: true })
+      .promise()
+   const param = response.Parameter.Value
+   return param
+}
+
 handler.post(async function (req, res) {
    try {
       const userId = req.body.userId
-      connection = new WebSocket(
-         'wss://ulf88o2ck7.execute-api.us-east-2.amazonaws.com/test',
-         null,
-         { headers: { userId } },
-      )
+      const apiKey = await getAWSParam('/ws-api-demo/api/key')
+      connection = new WebSocket(process.env.CHAT_API_URL, null, {
+         headers: { userId, 'x-api-key': apiKey },
+      })
       console.log('Successfully established connection')
       res.status(200).json({ success: true })
    } catch (err) {
