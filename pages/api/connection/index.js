@@ -19,7 +19,7 @@ handler.post(async function (req, res) {
       global.connection = new WebSocket(process.env.CHAT_API_URL, null, {
          headers: { 'x-websocket-userid': userId, 'x-api-key': apiKey },
       })
-      console.log('Successfully established connection')
+      console.log('Successfully established connection!')
       res.status(200).json({ success: true })
    } catch (err) {
       console.error('Error establishing connection:', err)
@@ -33,7 +33,7 @@ handler.delete(async function (req, res) {
       const userId = req.body.userId
       if (!global.connection) throw new Error('Connection not yet established')
       connection.send(JSON.stringify({ action: 'logout', data: { userId } }))
-      console.log('Successfully removed connection')
+      console.log('Successfully removed connection!')
       res.status(200).json({ success: true })
    } catch (err) {
       console.error('Error removing connection:', err)
