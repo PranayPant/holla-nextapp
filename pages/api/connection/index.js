@@ -5,7 +5,7 @@ import AWS from 'aws-sdk'
 const handler = connect()
 
 async function getAWSParam(name) {
-   const response = await new AWS.SSM({ region: process.env.AWS_REGION })
+   const response = await new AWS.SSM({ region: process.env.APP_AWS_REGION })
       .getParameter({ Name: name, WithDecryption: true })
       .promise()
    const param = response.Parameter.Value
