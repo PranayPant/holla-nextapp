@@ -3,7 +3,7 @@ import styles from '../styles/Home.module.css'
 import UnAuthenticated from '../components/UnAuthenticated'
 import Dashboard from '../components/Dashboard'
 
-export default function Home({ session }) {
+export default function Home({ session, connFns }) {
    return (
       <div className={styles.container}>
          <Head>
@@ -12,7 +12,9 @@ export default function Home({ session }) {
          </Head>
 
          <main className={styles.main}>
-            {session.state.user && <Dashboard session={session} />}
+            {session.state.user && (
+               <Dashboard session={session} connFns={connFns} />
+            )}
             {!session.state.user && <UnAuthenticated session={session} />}
          </main>
 

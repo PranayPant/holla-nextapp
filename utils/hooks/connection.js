@@ -1,18 +1,16 @@
-
-import {useState, useEffect} from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-export default async function useConnection(){
-   const [state, setState] = useState({connection: null})
-   async function connect(){
-      const {data:{connection}} = await axios.get('/api/connect')
-      setState(prev => ({...prev, connection}))
-
+export default function useConnection() {
+   async function connect(userId) {
+      const {
+         data: { success },
+      } = await axios.post('/api/connection', { userId })
    }
-   useEffect(()=>{
-      connect()
-   }, [])
-
-   return state
-
+   async function disconnect(userId) {
+      const {
+         data: { success },
+      } = await axios.delete('/api/connection', { data: { userId } })
+   }
+   return { connect, disconnect }
 }
