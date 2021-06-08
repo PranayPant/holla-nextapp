@@ -3,7 +3,6 @@ import connect from 'next-connect'
 import AWS from 'aws-sdk'
 
 const handler = connect()
-let connection = null
 
 async function getAWSParam(name) {
    const response = await new AWS.SSM({ region: process.env.AWS_REGION })
@@ -17,8 +16,8 @@ handler.post(async function (req, res) {
    try {
       const userId = req.body.userId
       const apiKey = await getAWSParam('/ws-api-demo/api/key')
-      connection = new WebSocket(process.env.CHAT_API_URL, null, {
-         headers: { userId, 'x-api-key': apiKey },
+      global.connection = new WebSocket(process.env.CHAT_API_URL, null, {
+         headers: { 'x-websocket-userid': userId, 'x-api-key': apiKey },
       })
       console.log('Successfully established connection')
       res.status(200).json({ success: true })
@@ -32,7 +31,7 @@ handler.post(async function (req, res) {
 handler.delete(async function (req, res) {
    try {
       const userId = req.body.userId
-      if (!connection) throw new Error('Connection not yet established')
+      if (!global.connection) throw new Error('Connection not yet established')
       connection.send(JSON.stringify({ action: 'logout', data: { userId } }))
       console.log('Successfully removed connection')
       res.status(200).json({ success: true })

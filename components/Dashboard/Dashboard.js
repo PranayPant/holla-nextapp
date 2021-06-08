@@ -4,8 +4,8 @@ export default function Dashboard({ session, connFns }) {
    const { state, logoutFromGoogle } = session
    const { connect, disconnect } = connFns
    useEffect(() => {
-      connect(state.user.name)
-      return () => disconnect(state.user.name)
+      connect(state.user.email)
+      return () => disconnect(state.user.email)
    }, [])
    return (
       <>
