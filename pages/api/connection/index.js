@@ -16,7 +16,6 @@ function makeAWSConfig() {
 global.awsConfig = global.awsConfig || makeAWSConfig()
 
 async function getAWSParam(name) {
-   console.log('config is', global.awsConfig)
    const response = await new AWS.SSM(global.awsConfig)
       .getParameter({ Name: name, WithDecryption: true })
       .promise()
@@ -31,7 +30,7 @@ handler.post(async function (req, res) {
       global.connection = new WebSocket(process.env.CHAT_API_URL, null, {
          headers: { 'x-websocket-userid': userId, 'x-api-key': apiKey },
       })
-      console.log('Successfully established connection!')
+      console.log('Successfully established connection!', global.connection)
       res.status(200).json({ success: true })
    } catch (err) {
       console.error('Error establishing connection:', err)
