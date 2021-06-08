@@ -16,6 +16,7 @@ function makeAWSConfig() {
 global.awsConfig = global.awsConfig || makeAWSConfig()
 
 async function getAWSParam(name) {
+   console.log('config is', global.awsConfig)
    const response = await new AWS.SSM(global.awsConfig)
       .getParameter({ Name: name, WithDecryption: true })
       .promise()
