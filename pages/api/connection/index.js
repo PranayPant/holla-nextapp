@@ -4,8 +4,19 @@ import AWS from 'aws-sdk'
 
 const handler = connect()
 
+function makeAWSConfig() {
+   const config = { region: process.env.APP_AWS_REGION }
+   if (process.env.ENV !== 'local') {
+      config.accessKeyId = process.env.APP_AWS_ACCESS_KEY_ID
+      config.secretAccessKey = process.env.APP_AWS_SECRET_ACCESS_KEY
+   }
+   return config
+}
+
+global.awsConfig = global.awsConfig || makeAWSConfig()
+
 async function getAWSParam(name) {
-   const response = await new AWS.SSM({ region: process.env.APP_AWS_REGION })
+   const response = await new AWS.SSM(global.awsConfig)
       .getParameter({ Name: name, WithDecryption: true })
       .promise()
    const param = response.Parameter.Value
