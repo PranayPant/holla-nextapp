@@ -27,10 +27,10 @@ handler.post(async function (req, res) {
    try {
       const userId = req.body.userId
       const apiKey = await getAWSParam('/ws-api-demo/api/key')
-      global.connection = new WebSocket(process.env.CHAT_API_URL, null, {
-         headers: { 'x-websocket-userid': userId, 'x-api-key': apiKey },
+      global.connection = new WebSocket(process.env.WS_API_URL, null, {
+         headers: { user_id: userId, api_key: apiKey },
       })
-      console.log('Successfully established connection!', global.connection)
+      console.log('Successfully established connection!')
       res.status(200).json({ success: true })
    } catch (err) {
       console.error('Error establishing connection:', err)
