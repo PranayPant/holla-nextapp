@@ -40,6 +40,10 @@ button {
    @apply bg-indigo-500;
 }
 
+.btn-secondary {
+   @apply bg-red-700;
+}
+
 .btn-primary:hover {
    @apply bg-indigo-400;
 }

@@ -1,6 +1,7 @@
 import WebSocket from 'ws'
 import connect from 'next-connect'
 import AWS from 'aws-sdk'
+import { record } from 'utils/hooks/connection'
 
 const handler = connect()
 
@@ -31,6 +32,10 @@ handler.post(async function (req, res) {
          headers: { user_id: userId, api_key: apiKey },
       })
       console.log('Successfully established connection!')
+      global.connection.addEventListener('message', (event) => {
+         console.log('Message received: ', event.data)
+         record({ message: event.data })
+      })
       res.status(200).json({ success: true })
    } catch (err) {
       console.error('Error establishing connection:', err)
@@ -43,7 +48,9 @@ handler.delete(async function (req, res) {
    try {
       const userId = req.body.userId
       if (!global.connection) throw new Error('Connection not yet established')
-      connection.send(JSON.stringify({ action: 'logout', data: { userId } }))
+      global.connection.send(
+         JSON.stringify({ action: 'logout', data: { userId } }),
+      )
       console.log('Successfully removed connection!')
       res.status(200).json({ success: true })
    } catch (err) {
